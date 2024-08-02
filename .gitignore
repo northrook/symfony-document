@@ -5,12 +5,14 @@
 *.code-workspace
 
 # Composer
-/vendor/
+/vendor
 /composer.phar
 
 # Build data
 .env
 *.lock
+/var
+/*.php
 
 # Node
 /node_modules/
