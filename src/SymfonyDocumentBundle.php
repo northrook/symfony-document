@@ -24,7 +24,7 @@ final class SymfonyDocumentBundle extends AbstractBundle
         $services = $container->services();
 
         $services->set( DocumentService::class )
-                 ->args( [ service( 'request_stack' ) ] )
+                 ->tag( 'controller.service_arguments' )
                  ->args(
                      [
                          service( 'request_stack' ),
