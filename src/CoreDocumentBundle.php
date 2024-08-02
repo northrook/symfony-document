@@ -24,6 +24,7 @@ final class CoreDocumentBundle extends AbstractBundle
         $services = $container->services();
 
         $services->set( DocumentService::class )
+                 ->args( [ service( 'request_stack' ) ] )
                  ->args(
                      [
                          service( 'request_stack' ),
