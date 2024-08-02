@@ -1,0 +1,35 @@
+{
+  "name": "northrook/symfony-document",
+  "type": "library",
+  "description": "Manage document meta; generating tags, SEO schema, assets, and custom properties.",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Northrook\\Symfony\\Service\\Document\\": "src",
+      "Northrook\\Runtime\\": "Runtime"
+    }
+  },
+  "authors": [
+    {
+      "name": "Martin",
+      "email": "mn@northrook.com"
+    }
+  ],
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.2",
+    "symfony/http-kernel": "^7.1",
+    "symfony/http-foundation": "^7.1",
+    "symfony/dependency-injection": "^7.1",
+    "northrook/core": "dev-main",
+    "northrook/filesystem": "dev-main",
+    "northrook/html-element": "dev-main",
+    "northrook/logger": "dev-main",
+    "northrook/html-formatter": "dev-main",
+    "northrook/assets": "dev-main"
+  },
+  "require-dev": {
+    "northrook/dev-env": "dev-main"
+  }
+}
