@@ -13,7 +13,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 /**
  * @author  Martin Nielsen <mn@northrook.com>
  */
-final class CoreDocumentBundle extends AbstractBundle
+final class SymfonyDocumentBundle extends AbstractBundle
 {
 
     public function loadExtension(
