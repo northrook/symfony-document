@@ -205,8 +205,6 @@ final class DocumentService
             'script'     => $this->asset->getEnqueued( 'script' ),
         ];
 
-        dump( $this);
-
         $this->assets = array_merge( $this->assets, $assets );
 
         return new Runtime\Document(
