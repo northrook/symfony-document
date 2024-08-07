@@ -24,8 +24,8 @@ final  class Document
 {
     use PropertyAccessor;
 
-    private ?string $id;
-    private ?string $title;
+    private ?string $documentId;
+    private ?string $documentTitle;
     private array   $sent   = [];
     private array   $meta   = [];
     private array   $assets = [];
@@ -36,8 +36,8 @@ final  class Document
         array                  $assets = [],
 
     ) {
-        $this->id    = $meta[ 'document.id' ] ?? null;
-        $this->title = $meta[ 'document.title' ] ?? null;
+        $this->documentId    = $meta[ 'document.id' ] ?? null;
+        $this->documentTitle = $meta[ 'document.title' ] ?? null;
         unset( $meta[ 'document.id' ], $meta[ 'document.title' ] );
         $this->meta   = $meta;
         $this->assets = $assets;
@@ -57,14 +57,14 @@ final  class Document
     }
 
     public function id( ?string $set = null ) : string {
-        return normalizeKey( $this->id ?? $set ?? 'top' );
+        return $this->documentId ??= normalizeKey( $this->documentId ?? $set ?? 'top' );
     }
 
     public function title( ?string $set = null ) : string {
-        if ( $set || !$this->title ) {
-            return $this->title = normalizeKey( $set ?? $_SERVER[ 'HTTP_HOST' ] ?? '' );
+        if ( $set || !$this->documentTitle ) {
+            return $this->documentTitle = normalizeKey( $set ?? $_SERVER[ 'HTTP_HOST' ] ?? '' );
         }
-        return $this->title;
+        return $this->documentTitle;
     }
 
     /**
@@ -137,7 +137,7 @@ final  class Document
             ];
 
             $this->sent[] = $name;
-            $tags[] = $meta;
+            $tags[]       = $meta;
         }
 
         return $tags;
