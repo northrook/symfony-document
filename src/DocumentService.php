@@ -200,8 +200,14 @@ final class DocumentService
 
         $this->meta += $this->robots;
 
-        $this->assets[ 'stylesheet' ] += $this->asset->getEnqueued( 'style' );
-        $this->assets[ 'script' ]     += $this->asset->getEnqueued( 'script' );
+        $assets = [
+            'stylesheet' => $this->asset->getEnqueued( 'stylesheet' ),
+            'script'     => $this->asset->getEnqueued( 'script' ),
+        ];
+
+        dump( $this);
+
+        $this->assets = array_merge( $this->assets, $assets );
 
         return new Runtime\Document(
             $this->body,
