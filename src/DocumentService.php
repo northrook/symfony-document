@@ -46,7 +46,7 @@ final class DocumentService
 
 
     public function __construct(
-        public readonly AssetManager       $asset,
+        public readonly ?AssetManager      $asset,
         private readonly Http\RequestStack $requestStack,
         private readonly ?LoggerInterface  $logger = null,
     ) {}
@@ -93,6 +93,13 @@ final class DocumentService
 
     public function body( ...$set ) : self {
         $this->body = \array_merge( $this->body, $set );
+        return $this;
+    }
+
+    public function asset( Script | Stylesheet ...$enqueue ) : DocumentService {
+        foreach ( $enqueue as $asset ) {
+            $this->assets[ $asset->type ][] = $asset;
+        }
         return $this;
     }
 
@@ -193,8 +200,8 @@ final class DocumentService
 
         $this->meta += $this->robots;
 
-        $this->assets[ 'stylesheet'] += $this->asset->getEnqueued('style');
-        $this->assets[ 'script'] += $this->asset->getEnqueued('script');
+        $this->assets[ 'stylesheet' ] += $this->asset->getEnqueued( 'style' );
+        $this->assets[ 'script' ]     += $this->asset->getEnqueued( 'script' );
 
         return new Runtime\Document(
             $this->body,

@@ -92,7 +92,7 @@ final  class Document
     public function assets( string $get = 'all' ) : array {
 
         $assets = [];
-å
+
         if ( $get === 'all' ) {
             foreach ( $this->assets as $type ) {
                 foreach ( $type as $asset ) {
