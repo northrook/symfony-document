@@ -7,6 +7,9 @@ namespace Northrook\Symfony\Service\Document;
 use JetBrains\PhpStorm\ExpectedValues;
 use Northrook\Asset\Script;
 use Northrook\Asset\Stylesheet;
+use Northrook\Asset\Type\Asset;
+use Northrook\Asset\Type\InlineAsset;
+use Northrook\AssetManager;
 use Northrook\Runtime;
 use Northrook\Symfony\Service\Document\Meta\Theme;
 use Psr\Log\LoggerInterface;
@@ -32,17 +35,18 @@ final class DocumentService
         'keywords'    => null,
         'author'      => null,
     ];
-    private array $body     = [];
-    private array $meta     = [];
-    private array $robots   = [];
-    private array $assets   = [];
 
+    private array $body   = [];
+    private array $meta   = [];
+    private array $robots = [];
+    private array $assets = [];
 
     /** @var bool Determines how robot tags will be set */
     public bool $isPublic = false;
 
 
     public function __construct(
+        public readonly AssetManager       $asset,
         private readonly Http\RequestStack $requestStack,
         private readonly ?LoggerInterface  $logger = null,
     ) {}
@@ -89,13 +93,6 @@ final class DocumentService
 
     public function body( ...$set ) : self {
         $this->body = \array_merge( $this->body, $set );
-        return $this;
-    }
-
-    public function asset( Script | Stylesheet ...$enqueue ) : DocumentService {
-        foreach ( $enqueue as $asset ) {
-            $this->assets[ $asset->type ][] = $asset;
-        }
         return $this;
     }
 
@@ -161,12 +158,16 @@ final class DocumentService
         string  $scheme = 'dark light',
         ?string $name = 'system',
     ) : DocumentService {
+
+        // Needs to generate theme.scheme.color,
+        // this is to allow for different colors based on light/dark
+
         foreach ( [
             'color'  => $color,
             'scheme' => $scheme,
             'name'   => $name,
         ] as $metaName => $content ) {
-            $this->meta( $metaName, $content );
+            $this->meta( "theme.$metaName", $content );
         }
         return $this;
     }
@@ -191,6 +192,9 @@ final class DocumentService
         }
 
         $this->meta += $this->robots;
+
+        $this->assets[ 'stylesheet'] += $this->asset->getEnqueued('style');
+        $this->assets[ 'script'] += $this->asset->getEnqueued('script');
 
         return new Runtime\Document(
             $this->body,

@@ -17,6 +17,8 @@ use function Northrook\normalizeKey;
  * @property-read ?string $description
  * @property-read ?string $keywords
  * @property-read ?string $author
+ * @property-read ?string $theme
+ *
  */
 final  class Document
 {
@@ -41,13 +43,17 @@ final  class Document
         $this->assets = $assets;
     }
 
-    public function __get( string $property ) {
-        return match ( $property ) {
+    public function __get( string $property ) : ?string {
+        $value = match ( $property ) {
             'id'                                => $this->id(),
             'title'                             => $this->title(),
             'description', 'keywords', 'author' => $this->getDocument( "$property" ),
+            'theme'                             => $this->meta[ 'theme.name' ] ?? null,
             default                             => null,
         };
+        // dump( "$property =>", $value );
+
+        return $value;
     }
 
     public function id( ?string $set = null ) : string {
@@ -86,7 +92,7 @@ final  class Document
     public function assets( string $get = 'all' ) : array {
 
         $assets = [];
-
+å
         if ( $get === 'all' ) {
             foreach ( $this->assets as $type ) {
                 foreach ( $type as $asset ) {
@@ -115,24 +121,32 @@ final  class Document
         return $assets;
     }
 
-    public function metaTags() : array {
+    public function meta( ?string $get = null ) : array {
 
-        $meta = [];
+        $tags = [];
 
         foreach ( $this->meta as $name => $value ) {
-            if ( \in_array( $name, $this->sent ) ) {
+            if ( !$value
+                 || ( $get && !\str_starts_with( $name, $get ) )
+                 || \in_array( $name, $this->sent ) ) {
                 continue;
             }
-            $meta[][ $this->getMetaName( $name ) ] = $value;
+            $meta = [
+                'name'    => $this->getMetaName( $name ),
+                'content' => $value,
+            ];
+
+            $this->sent[] = $name;
+            $tags[] = $meta;
         }
 
-        return $meta;
+        return $tags;
     }
 
-    private function getDocument( string $meta ) : string {
+    private function getDocument( string $meta ) : ?string {
         $meta         = "document.$meta";
         $this->sent[] = $meta;
-        return $this->meta[ $meta ] ?? '';
+        return $this->meta[ $meta ] ?? null;
     }
 
     private function getMetaName( string $key ) : string {

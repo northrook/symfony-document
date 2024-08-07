@@ -13,8 +13,8 @@ class DocumentContent
     }
 
     public function generateTitle(
-        int     $maxLength = 255,
-        ?string $template = null,
+        int                       $maxLength = 255,
+        null | string | callable $template = null,
     ) : string {
         return __METHOD__;
     }
@@ -38,11 +38,9 @@ class DocumentContent
         return __METHOD__;
     }
 
-    public function generateKeywords() {
+    public function generateKeywords() {}
 
-    }
-
-    public function generateOutline() : array  {
+    public function generateOutline() : array {
         return [];
     }
 }
