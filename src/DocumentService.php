@@ -92,7 +92,9 @@ final class DocumentService
     }
 
     public function body( ...$set ) : self {
-        $this->body = \array_merge( $this->body, $set );
+        foreach ( $set as $name => $value  ) {
+            $this->body[ normalizeKey($name) ] = $value;
+        }
         return $this;
     }
 
